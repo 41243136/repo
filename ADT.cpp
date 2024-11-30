@@ -85,34 +85,45 @@ public:
         }
         cout << endl;
     }
+
+    friend istream& operator>>(istream& is, Polynomial& poly);
+    friend ostream& operator<<(ostream& os, const Polynomial& poly);
 };
 
-int main() {
-    Polynomial p1, p2;
+istream& operator>>(istream& is, Polynomial& poly) {
     int numTerms;
     float coef;
     int exp;
-
-    cout << "Enter number of terms for polynomial p1: ";
-    cin >> numTerms;
+    cout << "Enter number of terms: ";
+    is >> numTerms;
     for (int i = 0; i < numTerms; ++i) {
         cout << "Enter coefficient and exponent for term " << i + 1 << ": ";
-        cin >> coef >> exp;
-        p1.AddTerm(coef, exp);
+        is >> coef >> exp;
+        poly.AddTerm(coef, exp);
     }
+    return is;
+}
 
-    cout << "Enter number of terms for polynomial p2: ";
-    cin >> numTerms;
-    for (int i = 0; i < numTerms; ++i) {
-        cout << "Enter coefficient and exponent for term " << i + 1 << ": ";
-        cin >> coef >> exp;
-        p2.AddTerm(coef, exp);
+ostream& operator<<(ostream& os, const Polynomial& poly) {
+    for (int i = 0; i < poly.terms; ++i) {
+        if (i > 0 && poly.termArray[i].coef > 0) {
+            os << " + ";
+        }
+        os << poly.termArray[i].coef << "x^" << poly.termArray[i].exp;
     }
+    return os;
+}
 
-    cout << "Polynomial p1: ";
-    p1.Print();
-    cout << "Polynomial p2: ";
-    p2.Print();
+int main() {
+    Polynomial p1, p2;
+
+    cout << "Enter polynomial p1:" << endl;
+    cin >> p1;
+    cout << "Enter polynomial p2:" << endl;
+    cin >> p2;
+
+    cout << "Polynomial p1: " << p1 << endl;
+    cout << "Polynomial p2: " << p2 << endl;
 
     float x;
     cout << "Enter a value to evaluate the polynomials: ";
@@ -120,6 +131,7 @@ int main() {
 
     float p1Value = p1.Eval(x);
     float p2Value = p2.Eval(x);
+
     float sumValue = p1Value + p2Value;
     float productValue = p1Value * p2Value;
 
